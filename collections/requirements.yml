@@ -1,6 +1,6 @@
 ---
 collections:
-- name: anultravioletaurora.nomadintosh
-  version: 1.0.5
-- name: anultravioletaurora.nomaduntu
-  version: 1.0.6
+  - name: anultravioletaurora.nomadintosh
+    version: 1.0.6
+  - name: anultravioletaurora.nomaduntu
+    version: 1.0.6
