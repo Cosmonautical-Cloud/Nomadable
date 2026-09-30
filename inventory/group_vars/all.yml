@@ -10,5 +10,3 @@ nomad_config_dir: "{{ config_dir }}/nomad.d"
 nomad_working_dir: "{{ working_dir }}/nomad"
 
 nomad_jobs_dir: "{{ nomad_working_dir }}/jobs"
-
-log_dir: "{{ homebrew_dir }}/var/log"
