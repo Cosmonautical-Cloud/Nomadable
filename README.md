@@ -22,7 +22,7 @@ Nomadable (and the [Nomadintosh](https://github.com/anultravioletaurora/Nomadint
 ## Requirements
 
 - Ansible installed on the control machine
-- The Nomadintosh/Nomaduntu collections, pinned in [`collections/requirements.yml`](collections/requirements.yml):
+- The Nomadintosh/Nomaduntu collections (and their shared [`cosmonautical.notify`](https://github.com/Cosmonautical-Cloud/ansible-collection-notify) dependency), pinned in [`collections/requirements.yml`](collections/requirements.yml):
   ```
   ansible-galaxy collection install -r collections/requirements.yml
   ```
