@@ -18,7 +18,10 @@ A single inventory can contain a mix of macOS and Ubuntu hosts. Nomadable dispat
 ## Requirements
 
 - Ansible installed on the control machine
-- Child playbook repositories cloned alongside this one (or included as submodules)
+- The Nomadintosh/Nomaduntu collections, pinned in [`collections/requirements.yml`](collections/requirements.yml):
+  ```
+  ansible-galaxy collection install -r collections/requirements.yml
+  ```
 - SSH access to all hosts in the inventory
 
 ## Inventory
@@ -81,7 +84,7 @@ Nomadable delegates to the appropriate child playbook for each host based on its
 - **macOS hosts** → [Nomadintosh](https://github.com/anultravioletaurora/Nomadintosh) — see that project's README for a full breakdown of what is configured.
 - **Ubuntu hosts** → [Nomaduntu](https://github.com/anultravioletaurora/Nomaduntu) — see that project's README for a full breakdown of what is configured.
 
-Both child playbooks configure Consul and Nomad with a shared datacenter derived from the inventory group name, so all nodes in a group join the same cluster regardless of OS.
+Both child playbooks configure Consul and Nomad with a shared datacenter derived from the inventory group name, so all nodes in a group join the same cluster regardless of OS. If you instead run each OS group separately against a partial inventory (e.g. per-OS Semaphore tasks), see [inventory/README.md](inventory/README.md#joining-an-existing-external-cluster) for `existing_consul_datacenter`/`existing_cluster_servers`, which both child projects support for joining a control plane whose servers aren't part of that particular run's own inventory.
 
 ## Remarks
 

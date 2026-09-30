@@ -1,0 +1,23 @@
+---
+namespace: anultravioletaurora
+name: nomadable
+authors:
+  - Violet Caulfield
+version: 1.0.0
+readme: README.md
+description: An Ansible playbook that composes Nomadintosh and Nomaduntu to deploy Nomad + Consul across a mixed macOS/Ubuntu cluster.
+license:
+  - MIT
+tags:
+  - nomad
+  - consul
+  - macos
+  - ubuntu
+  - homelab
+  - hashicorp
+repository: https://github.com/anultravioletaurora/Nomadable
+homepage: https://github.com/anultravioletaurora/Nomadable
+issues: https://github.com/anultravioletaurora/Nomadable/issues
+dependencies:
+  anultravioletaurora.nomadintosh: ">=1.2.0"
+  anultravioletaurora.nomaduntu: ">=1.3.0"
