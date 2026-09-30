@@ -51,13 +51,13 @@ See the individual child playbook READMEs for the full list of supported host va
 Run a full deployment across all hosts:
 
 ```zsh
-ansible-playbook -i inventory/hosts.yml playbooks/nomadable.yml
+ansible-playbook -i inventory/hosts.yml playbooks/main.yml
 ```
 
 To limit execution to a single host or group:
 
 ```zsh
-ansible-playbook -i inventory/hosts.yml playbooks/nomadable.yml --limit <hostname>
+ansible-playbook -i inventory/hosts.yml playbooks/main.yml --limit <hostname>
 ```
 
 ### Deployment scripts
@@ -90,3 +90,11 @@ Both child playbooks configure Consul and Nomad with a shared datacenter derived
 
 - **Multi-platform clusters** — Nomad's native support for multiple platforms means macOS and Ubuntu nodes can participate in the same cluster and share workloads. Platform-specific capabilities (e.g. hardware acceleration on macOS, GPU passthrough on Linux) are exposed via Nomad node attributes and can be targeted with job constraints.
 - **Child playbook versions** — Each child playbook is maintained independently. Pin submodule or collection versions as appropriate for your environment to avoid unexpected changes on deployment.
+
+## Wiring into Semaphore
+
+1. Add this repository as a Semaphore Repository, and a Key Store entry (SSH key plus become/sudo password) covering every host in the inventory — the same credentials `inventory/hosts.yml` would otherwise hold locally.
+2. Add a Semaphore Inventory. `inventory/hosts.yml` is gitignored — it holds plaintext SSH/become credentials, not something to commit — so define the hosts directly as a Semaphore "Static" inventory instead of pointing at a file in this repo. Use [`inventory/hosts.example.yml`](inventory/hosts.example.yml) as the shape to replicate.
+3. Add a Task Template of type "Ansible Playbook": this repository, `playbooks/main.yml`, and the Inventory/Key Store from the steps above. Semaphore installs `collections/requirements.yml` automatically before each run, so both child collections are pulled fresh from Galaxy at whatever version is pinned there — no separate `ansible-galaxy collection install` step to configure, and no stale local collection cache to worry about (unlike a manual `./deploy.zsh` run — see the note on `collections/requirements.yml`'s pins).
+4. There's no `plan`/`apply` split here the way Nomad-Jobs' Terraform pipeline has — Ansible has no true dry-run equivalent to `terraform plan`, only `--check --diff` (what `./check.zsh` runs locally), which isn't guaranteed identical to the real run for every module. If a review step before applying matters, add a second Task Template running the same playbook with `--check --diff` appended, to read before triggering the real one.
+5. Running this combined playbook through Semaphore, against a single inventory covering every host, means `existing_consul_datacenter`/`existing_cluster_servers` (see [inventory/README.md](inventory/README.md#joining-an-existing-external-cluster)) shouldn't be needed — those exist for the *partial*-inventory case (e.g. separate per-OS Nomadintosh/Nomaduntu Semaphore templates), which this setup replaces.
