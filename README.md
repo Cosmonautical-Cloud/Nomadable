@@ -15,6 +15,10 @@ A single inventory can contain a mix of macOS and Ubuntu hosts. Nomadable dispat
 
 **[Consul](https://developer.hashicorp.com/consul/docs)** is a service mesh and service discovery tool, also by HashiCorp. It provides a distributed key-value store, health checking, and DNS-based service discovery. Nomad integrates with Consul natively to handle cluster membership and service registration.
 
+## Scope
+
+Nomadable (and the [Nomadintosh](https://github.com/anultravioletaurora/Nomadintosh)/[Nomaduntu](https://github.com/anultravioletaurora/Nomaduntu) child playbooks it composes) provisions the Nomad + Consul **agents** themselves — it intentionally does not deploy the job specs those agents run. Nomadintosh used to also template and register a couple of job specs directly, but that role was removed 2026-09-05; job specs now live in dedicated repos instead — [`Jellify/Nomad-Jobs`](https://github.com/anultravioletaurora/Nomad-Jobs) (Terraform-managed) and a legacy hand-deployed `nomad-jobs` repo. If you're looking to add or change a running job, it belongs in one of those, not here.
+
 ## Requirements
 
 - Ansible installed on the control machine
