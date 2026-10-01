@@ -1,7 +1,7 @@
 ---
 collections:
   - name: anultravioletaurora.nomadintosh
-    version: 1.6.0
+    version: 1.6.1
   - name: anultravioletaurora.nomaduntu
     version: 1.3.5
   - name: cosmonautical.notify
