@@ -1,0 +1,6 @@
+---
+- name: Clean up Nomadintosh hosts
+  ansible.builtin.import_playbook: cosmonautical.nomadintosh.clean
+
+- name: Clean up Nomaduntu hosts
+  ansible.builtin.import_playbook: cosmonautical.nomaduntu.clean

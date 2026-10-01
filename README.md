@@ -58,6 +58,7 @@ Ansible Galaxy has no synopsis/description field for playbooks shipped inside a 
 |---|---|
 | `playbooks/main.yml` | Full deployment — imports `cosmonautical.nomadintosh.deploy` and `cosmonautical.nomaduntu.deploy` against whatever's in the inventory; each host only ever runs the half matching its own OS. See [What it does](#what-it-does) below for the full breakdown. Idempotent — safe to rerun. |
 | `playbooks/reboot.yml` | Reboots every host in the inventory, serially within each OS's own playbook — imports `cosmonautical.nomadintosh.reboot` and `cosmonautical.nomaduntu.reboot`. Does not run the full deployment. |
+| `playbooks/clean.yml` | Prunes stale upgrade residue on every host — `brew cleanup` on macOS, `apt autoremove` on Ubuntu — by importing `cosmonautical.nomadintosh.clean` and `cosmonautical.nomaduntu.clean`. Does not run the full deployment. |
 
 ### Running them
 
@@ -93,6 +94,12 @@ The repository includes helper scripts for common workflows:
 
 ```zsh
 ./reboot.zsh
+```
+
+- `./clean.zsh` — prunes stale upgrade residue on every host:
+
+```zsh
+./clean.zsh
 ```
 
 
