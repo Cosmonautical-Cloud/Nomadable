@@ -3,7 +3,7 @@ namespace: cosmonautical
 name: nomadable
 authors:
   - Violet Caulfield
-version: 2.0.0
+version: 2.0.1
 readme: README.md
 description: An Ansible playbook that composes Nomadintosh and Nomaduntu to deploy Nomad + Consul across a mixed macOS/Ubuntu cluster.
 license:
@@ -19,6 +19,6 @@ repository: https://github.com/Cosmonautical-Cloud/Nomadable
 homepage: https://github.com/Cosmonautical-Cloud/Nomadable
 issues: https://github.com/Cosmonautical-Cloud/Nomadable/issues
 dependencies:
-  cosmonautical.nomadintosh: ">=2.0.0"
+  cosmonautical.nomadintosh: ">=2.0.1"
   cosmonautical.nomaduntu: ">=2.0.0"
   cosmonautical.notify: ">=0.0.1"
