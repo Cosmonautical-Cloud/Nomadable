@@ -50,7 +50,16 @@ See the individual child playbook READMEs for the full list of supported host va
 - [Nomadintosh inventory docs](https://github.com/anultravioletaurora/Nomadintosh/blob/main/inventory/README.md)
 - [Nomaduntu inventory docs](https://github.com/anultravioletaurora/Nomaduntu)
 
-## Running the playbook
+## Playbooks
+
+Ansible Galaxy has no synopsis/description field for playbooks shipped inside a collection (unlike roles, which get one from `meta/main.yml`), so this is the canonical place it's documented:
+
+| Playbook | Description |
+|---|---|
+| `playbooks/main.yml` | Full deployment — imports `cosmonautical.nomadintosh.deploy` and `cosmonautical.nomaduntu.deploy` against whatever's in the inventory; each host only ever runs the half matching its own OS. See [What it does](#what-it-does) below for the full breakdown. Idempotent — safe to rerun. |
+| `playbooks/reboot.yml` | Reboots every host in the inventory, serially within each OS's own playbook — imports `cosmonautical.nomadintosh.reboot` and `cosmonautical.nomaduntu.reboot`. Does not run the full deployment. |
+
+### Running them
 
 Run a full deployment across all hosts:
 
@@ -78,6 +87,12 @@ The repository includes helper scripts for common workflows:
 
 ```zsh
 ./check.zsh
+```
+
+- `./reboot.zsh` — reboots every host in the inventory, one at a time:
+
+```zsh
+./reboot.zsh
 ```
 
 

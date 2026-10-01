@@ -1,0 +1,6 @@
+---
+- name: Reboot Nomadintosh hosts
+  ansible.builtin.import_playbook: cosmonautical.nomadintosh.reboot
+
+- name: Reboot Nomaduntu hosts
+  ansible.builtin.import_playbook: cosmonautical.nomaduntu.reboot

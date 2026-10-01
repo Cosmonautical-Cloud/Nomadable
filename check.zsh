@@ -1,4 +1,4 @@
 #! /bin/zsh
 
-# Run Nomadintosh in check mode
+# Run Nomadable in check mode
 ansible-playbook playbooks/main.yml --check --diff

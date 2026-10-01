@@ -1,6 +1,6 @@
 ---
 - name: Deploy Nomadintosh
-  ansible.builtin.import_playbook: cosmonautical.nomadintosh.nomadintosh
+  ansible.builtin.import_playbook: cosmonautical.nomadintosh.deploy
 
 - name: Deploy Nomaduntu
-  ansible.builtin.import_playbook: cosmonautical.nomaduntu.nomaduntu
+  ansible.builtin.import_playbook: cosmonautical.nomaduntu.deploy
