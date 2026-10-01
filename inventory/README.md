@@ -2,12 +2,12 @@
 
 This document explains how to structure your Ansible inventory file (`hosts.yml`) when deploying a mixed macOS/Ubuntu cluster via `playbooks/main.yml`.
 
-Nomadable itself has no OS-specific logic — it just imports [Nomadintosh](https://github.com/anultravioletaurora/Nomadintosh)'s and [Nomaduntu](https://github.com/anultravioletaurora/Nomaduntu)'s own playbooks, each of which internally gates every task on `ansible_facts['os_family']` (`Darwin` / `Debian`). A single inventory group can freely mix macOS and Ubuntu hosts — each host only ever runs the half of the combined playbook that matches its own OS, and both OS's Consul/Nomad roles derive `datacenter` from the same inventory group name, so they end up in the same datacenter regardless of platform.
+Nomadable itself has no OS-specific logic — it just imports [Nomadintosh](https://github.com/Cosmonautical-Cloud/Nomadintosh)'s and [Nomaduntu](https://github.com/Cosmonautical-Cloud/Nomaduntu)'s own playbooks, each of which internally gates every task on `ansible_facts['os_family']` (`Darwin` / `Debian`). A single inventory group can freely mix macOS and Ubuntu hosts — each host only ever runs the half of the combined playbook that matches its own OS, and both OS's Consul/Nomad roles derive `datacenter` from the same inventory group name, so they end up in the same datacenter regardless of platform.
 
 For the full host-variable reference, see each child project's own docs — this file only covers what's specific to running them together:
 
-- [Nomadintosh inventory docs](https://github.com/anultravioletaurora/Nomadintosh/blob/main/inventory/README.md) (macOS host variables: `server.enabled`, `container.enabled`, `podman.enabled`, `docker.enabled`, `seaweedfs.*`, `nfs_mounts_shares`, `volumes`)
-- [Nomaduntu inventory docs](https://github.com/anultravioletaurora/Nomaduntu/blob/main/inventory/README.md) (Ubuntu host variables: `server.enabled`, `docker.enabled`, `nfs_mounts_shares`, `volumes`)
+- [Nomadintosh inventory docs](https://github.com/Cosmonautical-Cloud/Nomadintosh/blob/main/inventory/README.md) (macOS host variables: `server.enabled`, `container.enabled`, `podman.enabled`, `docker.enabled`, `seaweedfs.*`, `nfs_mounts_shares`, `volumes`)
+- [Nomaduntu inventory docs](https://github.com/Cosmonautical-Cloud/Nomaduntu/blob/main/inventory/README.md) (Ubuntu host variables: `server.enabled`, `docker.enabled`, `nfs_mounts_shares`, `volumes`)
 
 ## Joining an existing external cluster
 

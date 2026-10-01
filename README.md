@@ -6,8 +6,8 @@ An Ansible playbook for deploying [Nomad](https://developer.hashicorp.com/nomad/
 
 Nomadable is the parent playbook that composes the platform-specific child playbooks:
 
-- **[Nomadintosh](https://github.com/anultravioletaurora/Nomadintosh)** — macOS (Apple Silicon) nodes managed via Homebrew and LaunchAgents
-- **[Nomaduntu](https://github.com/anultravioletaurora/Nomaduntu)** — Ubuntu nodes managed via the HashiCorp apt repository and systemd
+- **[Nomadintosh](https://github.com/Cosmonautical-Cloud/Nomadintosh)** — macOS (Apple Silicon) nodes managed via Homebrew and LaunchAgents
+- **[Nomaduntu](https://github.com/Cosmonautical-Cloud/Nomaduntu)** — Ubuntu nodes managed via the HashiCorp apt repository and systemd
 
 A single inventory can contain a mix of macOS and Ubuntu hosts. Nomadable dispatches to the correct child playbook based on the `ansible_os_family` fact of each host, so all nodes end up in the same Nomad/Consul datacenter regardless of operating system.
 
@@ -17,7 +17,7 @@ A single inventory can contain a mix of macOS and Ubuntu hosts. Nomadable dispat
 
 ## Scope
 
-Nomadable (and the [Nomadintosh](https://github.com/anultravioletaurora/Nomadintosh)/[Nomaduntu](https://github.com/anultravioletaurora/Nomaduntu) child playbooks it composes) provisions the Nomad + Consul **agents** themselves — it intentionally does not deploy the job specs those agents run. Nomadintosh used to also template and register a couple of job specs directly, but that role was removed 2026-09-05; job specs now live in dedicated repos instead — [`Jellify/Nomad-Jobs`](https://github.com/anultravioletaurora/Nomad-Jobs) (Terraform-managed) and a legacy hand-deployed `nomad-jobs` repo. If you're looking to add or change a running job, it belongs in one of those, not here.
+Nomadable (and the [Nomadintosh](https://github.com/Cosmonautical-Cloud/Nomadintosh)/[Nomaduntu](https://github.com/Cosmonautical-Cloud/Nomaduntu) child playbooks it composes) provisions the Nomad + Consul **agents** themselves — it intentionally does not deploy the job specs those agents run. Nomadintosh used to also template and register a couple of job specs directly, but that role was removed 2026-09-05; job specs now live in dedicated repos instead — [`Jellify/Nomad-Jobs`](https://github.com/anultravioletaurora/Nomad-Jobs) (Terraform-managed) and a legacy hand-deployed `nomad-jobs` repo. If you're looking to add or change a running job, it belongs in one of those, not here.
 
 ## Requirements
 
@@ -47,8 +47,8 @@ all:
 ```
 
 See the individual child playbook READMEs for the full list of supported host variables:
-- [Nomadintosh inventory docs](https://github.com/anultravioletaurora/Nomadintosh/blob/main/inventory/README.md)
-- [Nomaduntu inventory docs](https://github.com/anultravioletaurora/Nomaduntu)
+- [Nomadintosh inventory docs](https://github.com/Cosmonautical-Cloud/Nomadintosh/blob/main/inventory/README.md)
+- [Nomaduntu inventory docs](https://github.com/Cosmonautical-Cloud/Nomaduntu)
 
 ## Playbooks
 
@@ -107,8 +107,8 @@ The repository includes helper scripts for common workflows:
 
 Nomadable delegates to the appropriate child playbook for each host based on its OS:
 
-- **macOS hosts** → [Nomadintosh](https://github.com/anultravioletaurora/Nomadintosh) — see that project's README for a full breakdown of what is configured.
-- **Ubuntu hosts** → [Nomaduntu](https://github.com/anultravioletaurora/Nomaduntu) — see that project's README for a full breakdown of what is configured.
+- **macOS hosts** → [Nomadintosh](https://github.com/Cosmonautical-Cloud/Nomadintosh) — see that project's README for a full breakdown of what is configured.
+- **Ubuntu hosts** → [Nomaduntu](https://github.com/Cosmonautical-Cloud/Nomaduntu) — see that project's README for a full breakdown of what is configured.
 
 Both child playbooks configure Consul and Nomad with a shared datacenter derived from the inventory group name, so all nodes in a group join the same cluster regardless of OS. If you instead run each OS group separately against a partial inventory (e.g. per-OS Semaphore tasks), see [inventory/README.md](inventory/README.md#joining-an-existing-external-cluster) for `existing_consul_datacenter`/`existing_cluster_servers`, which both child projects support for joining a control plane whose servers aren't part of that particular run's own inventory.
 
