@@ -125,7 +125,7 @@ Anything that should be versioned and reviewed — and bumped by Renovate — li
 
 | Group | What it provisions |
 |---|---|
-| `github_runners` | Toolchain for GitHub Actions self-hosted runners — pinned bun, Maestro, Android SDK (see [`github_runners.yml`](group_vars/github_runners.yml)). The runner itself is the `actions-runner` Nomad job in Jellify/Nomad-Jobs, which targets this group via Nomadintosh's `inventory_groups` node meta |
+| `github_runners` | Toolchain for GitHub Actions self-hosted runners — pinned GitHub Actions runner binary (`/opt/actions-runner/current`), bun, Maestro, Android SDK (see [`github_runners.yml`](group_vars/github_runners.yml)). Registering and running the runner is the `actions-runner` Nomad job in Jellify/Nomad-Jobs, which targets this group via Nomadintosh's `inventory_groups` node meta |
 
 To add a runner, add the host to `github_runners` in the inventory — its datacenter still comes from its DNS name, so a group can mix hosts from any datacenter.
 
