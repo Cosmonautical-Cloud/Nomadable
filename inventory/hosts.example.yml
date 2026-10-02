@@ -12,25 +12,37 @@ all:
     # nfs_mounts_shares (no default)
     # nas_host: 192.0.2.10
 
-# Each top-level group name becomes the Consul/Nomad datacenter for its hosts.
+# Datacenters come from each host's DNS name, so hosts must be listed by
+# fully qualified name: the second-to-last label is the Nomad datacenter
+# (server1.homelab.example -> homelab, client3.games.example -> games), and
+# the Consul servers' shared label is everyone's Consul datacenter. Group
+# names are free - use them to organise hosts and for roles/Nomad targeting.
 # Hosts with `server: true` form the control plane; all others are client nodes.
 # See inventory/README.md for the full variable reference.
 
-your-datacenter:
+homelab:
   hosts:
-    server1.example.com:
+    server1.homelab.example:
       server: true
-    server2.example.com:
+    server2.homelab.example:
       server: true
-    server3.example.com:
+    server3.homelab.example:
       server: true
 
-    client1.example.com:
+    client1.homelab.example:
       podman: true
 
-    client2.example.com:
+    client2.homelab.example:
       docker: true
-      gh_actions: true
 
-    client3.example.com:
-      minecraft: true
+games:
+  hosts:
+    client3.games.example:
+      docker: true
+
+# Membership only - what these hosts get is in
+# group_vars/github_runners.yml. Groups can mix hosts from
+# any datacenter.
+github_runners:
+  hosts:
+    client2.homelab.example:

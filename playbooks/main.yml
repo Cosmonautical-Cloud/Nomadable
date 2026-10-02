@@ -1,4 +1,18 @@
 ---
+- name: Check Nomadable's group_vars are loaded
+  hosts: all
+  gather_facts: false
+  tags: [always]
+  tasks:
+    - name: Assert vars_plugins/nomadable_group_vars.py ran
+      ansible.builtin.assert:
+        that: nomadable_group_vars_loaded | default(false)
+        fail_msg: >-
+          group_vars/ wasn't loaded, so group-specific toolchains (e.g.
+          github_runners) would be skipped. Run playbooks/main.yml from this
+          repository so Ansible finds playbooks/vars_plugins/.
+        quiet: true
+
 - name: Deploy Nomadintosh
   ansible.builtin.import_playbook: cosmonautical.nomadintosh.deploy
 

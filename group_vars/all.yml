@@ -1,0 +1,5 @@
+---
+# Set for every host by playbooks/vars_plugins/nomadable_group_vars.py;
+# main.yml fails fast without it rather than deploying hosts without their
+# group_vars.
+nomadable_group_vars_loaded: true

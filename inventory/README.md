@@ -2,7 +2,7 @@
 
 This document explains how to structure your Ansible inventory file (`hosts.yml`) when deploying a mixed macOS/Ubuntu cluster via `playbooks/main.yml`.
 
-Nomadable itself has no OS-specific logic — it just imports [Nomadintosh](https://github.com/Cosmonautical-Cloud/Nomadintosh)'s and [Nomaduntu](https://github.com/Cosmonautical-Cloud/Nomaduntu)'s own playbooks, each of which internally gates every task on `ansible_facts['os_family']` (`Darwin` / `Debian`). A single inventory group can freely mix macOS and Ubuntu hosts — each host only ever runs the half of the combined playbook that matches its own OS, and both OS's Consul/Nomad roles derive `datacenter` from the same inventory group name, so they end up in the same datacenter regardless of platform.
+Nomadable itself has no OS-specific logic — it just imports [Nomadintosh](https://github.com/Cosmonautical-Cloud/Nomadintosh)'s and [Nomaduntu](https://github.com/Cosmonautical-Cloud/Nomaduntu)'s own playbooks, each of which internally gates every task on `ansible_facts['os_family']` (`Darwin` / `Debian`). A single inventory group can freely mix macOS and Ubuntu hosts — each host only ever runs the half of the combined playbook that matches its own OS, and both OS's Consul/Nomad roles derive `datacenter` from the host's DNS domain, so they end up in the same datacenter regardless of platform.
 
 For the full host-variable reference, see each child project's own docs — this file only covers what's specific to running them together:
 
