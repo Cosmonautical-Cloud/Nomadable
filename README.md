@@ -30,7 +30,7 @@ Nomadable (and the [Nomadintosh](https://github.com/Cosmonautical-Cloud/Nomadint
 
 ## Inventory
 
-Hosts are organised into named groups; the group name becomes the Consul/Nomad [**datacenter**](https://developer.hashicorp.com/consul/docs/reference/agent/configuration-file/general#datacenter) for every host in that group. A single group may contain a mix of macOS and Ubuntu hosts.
+Each host's Nomad [**datacenter**](https://developer.hashicorp.com/nomad/docs/configuration#datacenter) is its DNS domain label (`hopper.jellify.app` → `jellify`), and the Consul datacenter is the Consul servers' domain label — so hosts must be listed by fully qualified name. Inventory groups are freeform: organise hosts however you like, and target groups from roles (via [group variables](#group-variables)) and Nomad jobs (via `meta.inventory_groups`), mixing hosts across datacenters. A single group may contain a mix of macOS and Ubuntu hosts.
 
 Example inventory with mixed hosts:
 
@@ -110,17 +110,31 @@ Nomadable delegates to the appropriate child playbook for each host based on its
 - **macOS hosts** → [Nomadintosh](https://github.com/Cosmonautical-Cloud/Nomadintosh) — see that project's README for a full breakdown of what is configured.
 - **Ubuntu hosts** → [Nomaduntu](https://github.com/Cosmonautical-Cloud/Nomaduntu) — see that project's README for a full breakdown of what is configured.
 
-Both child playbooks configure Consul and Nomad with a shared datacenter derived from the inventory group name, so all nodes in a group join the same cluster regardless of OS. If you instead run each OS group separately against a partial inventory (e.g. per-OS Semaphore tasks), see [inventory/README.md](inventory/README.md#joining-an-existing-external-cluster) for `existing_consul_datacenter`/`existing_cluster_servers`, which both child projects support for joining a control plane whose servers aren't part of that particular run's own inventory.
+Both child playbooks derive datacenters the same way — Nomad from each host's DNS domain, Consul from the servers' domain — so macOS and Ubuntu hosts in the same domain land in the same datacenter. If you instead run each OS group separately against a partial inventory (e.g. per-OS Semaphore tasks), see [inventory/README.md](inventory/README.md#joining-an-existing-external-cluster) for `existing_consul_datacenter`/`existing_cluster_servers`, which both child projects support for joining a control plane whose servers aren't part of that particular run's own inventory.
 
 ## Remarks
 
 - **Multi-platform clusters** — Nomad's native support for multiple platforms means macOS and Ubuntu nodes can participate in the same cluster and share workloads. Platform-specific capabilities (e.g. hardware acceleration on macOS, GPU passthrough on Linux) are exposed via Nomad node attributes and can be targeted with job constraints.
 - **Child playbook versions** — Each child playbook is maintained independently. Pin submodule or collection versions as appropriate for your environment to avoid unexpected changes on deployment.
 
+## Group variables
+
+Anything that should be versioned and reviewed — and bumped by Renovate — lives in [`group_vars/`](group_vars), not in the inventory itself. The inventory (local `inventory/hosts.yml` or Semaphore's Static inventory) only says which hosts are in which group.
+
+[`playbooks/vars_plugins/nomadable_group_vars.py`](playbooks/vars_plugins/nomadable_group_vars.py) loads `group_vars/` (and `host_vars/`, if present) for every run, whatever inventory it uses, with nothing to configure: Ansible picks up `vars_plugins/` next to the playbook on its own. It's needed because Ansible normally only reads `group_vars/` beside the inventory source, which a Semaphore Static inventory isn't, or beside the playbook, which only applies to plays in that directory, and every play in `playbooks/main.yml` is imported from the child collections. These load at group_vars precedence, so a host's own inventory vars still override them; Semaphore's extra variables override both. `main.yml` stops before deploying anything if the plugin didn't run, rather than deploying hosts without their group's toolchain.
+
+| Group | What it provisions |
+|---|---|
+| `github_runners` | Toolchain for GitHub Actions self-hosted runners — pinned bun, Maestro, Android SDK (see [`github_runners.yml`](group_vars/github_runners.yml)). The runner itself is the `actions-runner` Nomad job in Jellify/Nomad-Jobs, which targets this group via Nomadintosh's `inventory_groups` node meta |
+
+To add a runner, add the host to `github_runners` in the inventory — its datacenter still comes from its DNS name, so a group can mix hosts from any datacenter.
+
+Versions annotated with a `# renovate:` comment are bumped by Renovate (see `renovate.json`). Merging a bump doesn't touch any host — it lands on the next deploy.
+
 ## Wiring into Semaphore
 
 1. Add this repository as a Semaphore Repository, and a Key Store entry (SSH key plus become/sudo password) covering every host in the inventory — the same credentials `inventory/hosts.yml` would otherwise hold locally.
 2. Add a Semaphore Inventory. `inventory/hosts.yml` is gitignored — it holds plaintext SSH/become credentials, not something to commit — so define the hosts directly as a Semaphore "Static" inventory instead of pointing at a file in this repo. Use [`inventory/hosts.example.yml`](inventory/hosts.example.yml) as the shape to replicate.
-3. Add a Task Template of type "Ansible Playbook": this repository, `playbooks/main.yml`, and the Inventory/Key Store from the steps above. Semaphore installs `collections/requirements.yml` automatically before each run, so both child collections are pulled fresh from Galaxy at whatever version is pinned there — no separate `ansible-galaxy collection install` step to configure, and no stale local collection cache to worry about (unlike a manual `./deploy.zsh` run — see the note on `collections/requirements.yml`'s pins).
+3. Add a Task Template of type "Ansible Playbook": this repository, `playbooks/main.yml`, and the Inventory/Key Store from the steps above. No extra CLI arguments are needed: the committed [group variables](#group-variables) load on top of the Static inventory automatically. Semaphore installs `collections/requirements.yml` automatically before each run, so both child collections are pulled fresh from Galaxy at whatever version is pinned there — no separate `ansible-galaxy collection install` step to configure, and no stale local collection cache to worry about (unlike a manual `./deploy.zsh` run — see the note on `collections/requirements.yml`'s pins).
 4. There's no `plan`/`apply` split here the way Nomad-Jobs' Terraform pipeline has — Ansible has no true dry-run equivalent to `terraform plan`, only `--check --diff` (what `./check.zsh` runs locally), which isn't guaranteed identical to the real run for every module. If a review step before applying matters, add a second Task Template running the same playbook with `--check --diff` appended, to read before triggering the real one.
-5. Running this combined playbook through Semaphore, against a single inventory covering every host, means `existing_consul_datacenter`/`existing_cluster_servers` (see [inventory/README.md](inventory/README.md#joining-an-existing-external-cluster)) shouldn't be needed — those exist for the *partial*-inventory case (e.g. separate per-OS Nomadintosh/Nomaduntu Semaphore templates), which this setup replaces.
+5. One Static inventory covering every host needs nothing else. If you split inventories instead (e.g. one per datacenter, each with its own Task Template or Variable Group), any run whose inventory has no `server.enabled` hosts must set `existing_consul_datacenter` and `existing_cluster_servers` in its extra variables (see [inventory/README.md](inventory/README.md#joining-an-existing-external-cluster)) — otherwise those hosts would derive a Consul datacenter of their own and have no servers to join. Their Nomad datacenter still comes from DNS either way.

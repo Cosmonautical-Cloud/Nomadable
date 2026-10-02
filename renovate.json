@@ -1,0 +1,24 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "dependencyDashboard": true,
+  "schedule": ["before 9am on monday"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Versions pinned in inventory group_vars, annotated with a `# renovate:` comment on the line above",
+      "managerFilePatterns": ["/^group_vars/.+\\.ya?ml$/"],
+      "matchStrings": [
+        "#\\s*renovate:\\s*datasource=(?<datasource>\\S+)\\s+depName=(?<depName>\\S+)(?:\\s+extractVersion=(?<extractVersion>\\S+))?\\s*\\n[^:\\n]+:\\s*\"?(?<currentValue>[^\"\\s]+)\"?"
+      ],
+      "extractVersionTemplate": "{{#if extractVersion}}{{{extractVersion}}}{{else}}^v?(?<version>.+)${{/if}}"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "oven-sh/bun publishes its versioned bun@<version> Homebrew formula a little after the GitHub release - wait so a PR never pins a formula that doesn't exist yet",
+      "matchDepNames": ["oven-sh/bun"],
+      "minimumReleaseAge": "3 days"
+    }
+  ]
+}

@@ -1,8 +1,8 @@
 ---
 collections:
   - name: cosmonautical.nomadintosh
-    version: 4.0.0
+    version: 5.0.0
   - name: cosmonautical.nomaduntu
-    version: 4.0.0
+    version: 5.0.0
   - name: cosmonautical.notify
     version: 0.0.1

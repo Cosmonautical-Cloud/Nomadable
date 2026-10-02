@@ -1,0 +1,46 @@
+---
+# Everything a GitHub Actions runner host needs, for every host in the
+# github_runners inventory group. The inventory (including Semaphore's static
+# one) only lists which hosts are in the group - this file is committed so
+# Renovate can bump the versions below.
+#
+# Loaded by playbooks/vars_plugins/nomadable_group_vars.py for any host in a
+# group named like this file, whatever inventory the run uses.
+
+# The runner itself (download, registration, lifecycle) is the actions-runner
+# Nomad job in Jellify/Nomad-Jobs, which lands on these hosts via the
+# `inventory_groups` node meta Nomadintosh's nomad role publishes. That job
+# hardcodes the paths these roles produce (/opt/maestro/current/bin, the
+# openjdk@17 JAVA_HOME, the Android SDK root) - keep them in sync.
+
+# renovate: datasource=github-releases depName=oven-sh/bun extractVersion=^bun-v(?<version>.+)$
+github_runner_bun_version: "1.3.4"
+# renovate: datasource=github-releases depName=mobile-dev-inc/maestro extractVersion=^cli-(?<version>.+)$
+github_runner_maestro_version: "2.5.1"
+
+# The oven-sh/bun tap is tapped and trusted automatically because the
+# formula is fully qualified. exclusive removes any other bun formula first
+# (every version links bin/bun).
+additional_homebrew_packages__github_runners:
+  - name: "oven-sh/bun/bun@{{ github_runner_bun_version }}"
+    exclusive: true
+
+release_archives__github_runners:
+  - name: maestro
+    version: "{{ github_runner_maestro_version }}"
+    url: "https://github.com/mobile-dev-inc/maestro/releases/download/cli-{{ github_runner_maestro_version }}/maestro.zip"
+    dest: /opt/maestro
+
+# Pre-warmed so CI runs never download SDK pieces. Matches the Jellify App's
+# android/build.gradle (compileSdk, buildTools, NDK, CMake) and the Maestro
+# workflow's emulator image; Gradle still fetches anything that drifts.
+android_sdk:
+  enabled: true
+android_sdk_packages:
+  - platform-tools
+  - emulator
+  - platforms;android-37.0
+  - build-tools;37.0.0
+  - ndk;27.1.12297006
+  - cmake;3.22.1
+  - system-images;android-34;google_apis;arm64-v8a
