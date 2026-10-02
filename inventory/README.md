@@ -27,18 +27,22 @@ all:
   vars:
     ansible_user: violet
     ansible_ssh_private_key_file: ~/.ssh/id_rsa
+    nas_host: 192.0.2.10              # NFS server - required whenever any host sets nfs_mounts_shares
 
 jellify:
   hosts:
     galileo.jellify.app:            # macOS - handled by Nomadintosh
       container:
         enabled: true
+      nfs_mounts_shares:
+        - share_export_path: /var/nfs/shared/Jellify
     kepler.jellify.app:              # Ubuntu - handled by Nomaduntu
       docker:
         enabled: true
       nfs_mounts_shares:
-        - name: Jellify
-          export: /var/nfs/shared/Jellify   # mount_point omitted - defaults per-OS
+        - share_export_path: /var/nfs/shared/Jellify
 ```
 
-`galileo`'s share would default to `/Volumes/Jellify` (Nomadintosh's `nfs_mounts_default_dir`); `kepler`'s to `/mnt/Jellify` (Nomaduntu's) — see each child project's `nfs_mounts` role README for the exact defaulting rule.
+The same share entry mounts at a per-OS path: `galileo` gets `/Volumes/Jellify` (Nomadintosh's `volume_mount_path` + the export's last path component), `kepler` gets `/mnt/jellify` (Nomaduntu's, lowercased) — see each child project's `nfs_mounts` role README for the exact rule.
+
+`nas_host` has no default in either child project — it's site-specific, so set it yourself (inventory `group_vars`/`host_vars`, or extra vars such as Semaphore variables). Any host with `nfs_mounts_shares` but no `nas_host` fails before anything is changed.
