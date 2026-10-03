@@ -31,6 +31,12 @@ github_runner_maestro_version: "2.5.1"
 additional_homebrew_packages__github_runners:
   - name: "oven-sh/bun/bun@{{ github_runner_bun_version }}"
     exclusive: true
+  # CocoaPods and fastlane for the App's iOS jobs. Keep the major.minor in sync
+  # with ios/.ruby-version in Jellify-Music/App, which sets the exact version
+  # for its GitHub-hosted runners; Homebrew always installs the line's latest
+  # patch. The actions-runner job puts /opt/homebrew/opt/ruby@4.0/bin on PATH,
+  # which keeps pointing at 4.0 once Homebrew's plain `ruby` moves past it.
+  - ruby@4.0
 
 release_archives__github_runners:
   # Unpacks flat, so /opt/actions-runner/current is the runner root (run.sh).
