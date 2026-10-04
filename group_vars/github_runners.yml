@@ -15,6 +15,10 @@
 # (4096). That job hardcodes the paths these roles produce
 # (/opt/actions-runner/current, /opt/maestro/current/bin, the openjdk@17
 # JAVA_HOME, the Android SDK root) - keep them in sync.
+#
+# Xcode and its iOS simulator runtime need nothing here: Nomadintosh installs
+# them for every macOS host in this group (a "magic group" there). Sign in to
+# the App Store on each Mac before its first deploy - mas can't.
 
 # Keep in sync with packageManager in Jellify-Music/App's package.json, which
 # sets the version for its GitHub-hosted runners.
