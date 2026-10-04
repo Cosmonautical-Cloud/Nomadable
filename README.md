@@ -126,6 +126,7 @@ Anything that should be versioned and reviewed — and bumped by Renovate — li
 | Group | What it provisions |
 |---|---|
 | `github_runners` | Toolchain for GitHub Actions self-hosted runners — pinned GitHub Actions runner binary (`/opt/actions-runner/current`), bun, Ruby, Maestro, Android SDK (see [`github_runners.yml`](group_vars/github_runners.yml)). On macOS hosts, Nomadintosh also installs Xcode and an iOS simulator runtime for this group (one of its [magic groups](https://github.com/Cosmonautical-Cloud/Nomadintosh#magic-groups)); sign in to the App Store on each Mac before its first deploy. Registering and running the runner is the `actions-runner` Nomad job in Jellify/Nomad-Jobs, which targets this group via Nomadintosh's `inventory_groups` node meta |
+| `game_servers` | Host packages for game servers — the Java runtime Minecraft runs (see [`game_servers.yml`](group_vars/game_servers.yml)). The `minecraft` and `valheim` Nomad jobs in Jellify/Nomad-Jobs target this group via nomaduntu's `inventory_groups` node meta |
 
 To add a runner, add the host to `github_runners` in the inventory — its datacenter still comes from its DNS name, so a group can mix hosts from any datacenter.
 

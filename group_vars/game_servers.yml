@@ -1,0 +1,14 @@
+---
+# What a game server host needs, for every host in the game_servers inventory
+# group. The inventory (including Semaphore's static one) only lists which
+# hosts are in the group.
+#
+# Loaded by playbooks/vars_plugins/nomadable_group_vars.py for any host in a
+# group named like this file, whatever inventory the run uses.
+
+# The minecraft and valheim Nomad jobs in Jellify/Nomad-Jobs land on these
+# hosts via the `inventory_groups` node meta nomaduntu's nomad role publishes.
+# minecraft runs /usr/lib/jvm/java-25-openjdk-amd64/bin/java, so it needs
+# openjdk-25-jre-headless here, as additional_apt_packages__game_servers (the
+# suffix merges it with the all-level additional_apt_packages instead of
+# replacing that list) - keep the package and that path in sync.
