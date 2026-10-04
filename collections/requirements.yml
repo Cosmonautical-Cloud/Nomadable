@@ -1,7 +1,11 @@
 ---
 collections:
   - name: cosmonautical.nomadintosh
-    version: 6.0.0
+    version: 6.0.1
+  # Nomadintosh's dependency, pinned here too so a collections path that
+  # already has an older Macible gets upgraded rather than failing to resolve.
+  - name: cosmonautical.macible
+    version: 0.2.1
   - name: cosmonautical.nomaduntu
     version: 5.0.0
   - name: cosmonautical.notify
