@@ -1,0 +1,7 @@
+---
+galaxy_info:
+  author: Violet Caulfield
+  description: Sets the datacenter fact from the host's first non-all, non-ungrouped inventory group.
+  license: GPL-3.0-only
+  min_ansible_version: "2.15"
+dependencies: []
