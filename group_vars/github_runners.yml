@@ -48,7 +48,8 @@ release_archives__github_runners:
   # pulls it out from under a running runner.
   - name: actions-runner
     version: "{{ github_runner_actions_runner_version }}"
-    url: "https://github.com/actions/runner/releases/download/v{{ github_runner_actions_runner_version }}/actions-runner-osx-arm64-{{ github_runner_actions_runner_version }}.tar.gz"
+    url: "https://github.com/actions/runner/releases/download/v{{ github_runner_actions_runner_version }}/actions-runner-osx-arm64-\
+      {{ github_runner_actions_runner_version }}.tar.gz"
     dest: /opt/actions-runner
   - name: maestro
     version: "{{ github_runner_maestro_version }}"
