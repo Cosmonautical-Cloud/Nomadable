@@ -25,7 +25,7 @@
 # renovate: datasource=github-releases depName=oven-sh/bun extractVersion=^bun-v(?<version>.+)$
 github_runner_bun_version: "1.4.2"
 # renovate: datasource=github-releases depName=actions/runner extractVersion=^v(?<version>.+)$
-github_runner_actions_runner_version: "2.337.0"
+github_runner_actions_runner_version: "2.338.2"
 # renovate: datasource=github-releases depName=mobile-dev-inc/maestro extractVersion=^cli-(?<version>.+)$
 github_runner_maestro_version: "2.5.1"
 
