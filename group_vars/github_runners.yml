@@ -27,7 +27,7 @@ github_runner_bun_version: "1.4.2"
 # renovate: datasource=github-releases depName=actions/runner extractVersion=^v(?<version>.+)$
 github_runner_actions_runner_version: "2.337.0"
 # renovate: datasource=github-releases depName=mobile-dev-inc/maestro extractVersion=^cli-(?<version>.+)$
-github_runner_maestro_version: "2.5.1"
+github_runner_maestro_version: "2.12.1"
 
 # The oven-sh/bun tap is tapped and trusted automatically because the
 # formula is fully qualified. exclusive removes any other bun formula first
