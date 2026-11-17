@@ -23,7 +23,7 @@
 # Keep in sync with packageManager in Jellify-Music/App's package.json, which
 # sets the version for its GitHub-hosted runners.
 # renovate: datasource=github-releases depName=oven-sh/bun extractVersion=^bun-v(?<version>.+)$
-github_runner_bun_version: "1.4.2"
+github_runner_bun_version: "1.4.4"
 # renovate: datasource=github-releases depName=actions/runner extractVersion=^v(?<version>.+)$
 github_runner_actions_runner_version: "2.337.0"
 # renovate: datasource=github-releases depName=mobile-dev-inc/maestro extractVersion=^cli-(?<version>.+)$
