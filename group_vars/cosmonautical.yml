@@ -7,6 +7,17 @@
 # Loaded by playbooks/vars_plugins/nomadable_group_vars.py for any host in a
 # group named like this file, whatever inventory the run uses.
 
+# Terraform for Semaphore's Nomad Jobs tasks (Cosmonautical-Cloud/Nomad-Jobs
+# and Jellify-Music/Nomad-Jobs). The semaphore job isn't pinned to a host and
+# runs /opt/homebrew/bin/terraform from whichever server Nomad places it on,
+# so every server needs it. It used to be on cassiopeia only, by hand; when
+# Semaphore moved to taurus its tasks failed with `exec: "terraform":
+# executable file not found in $PATH`. Both repos keep state in Consul, and
+# Terraform refuses state written by a newer version, so keep every server
+# on the same version (Homebrew installs this but doesn't upgrade it).
+additional_homebrew_packages__cosmonautical:
+  - hashicorp/tap/terraform
+
 # PHP extensions for the nextcloud jobs in Cosmonautical-Cloud/Nomad-Jobs
 # (nextcloud, nextcloud-cron, nextcloud-preview-generate,
 # nextcloud-roms-scan). They run Homebrew's php@8.4 on whichever server Nomad
