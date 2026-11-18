@@ -14,7 +14,7 @@
 # job: its tarball holds more files than Nomad's artifact getter allows
 # (4096). That job hardcodes the paths these roles produce
 # (/opt/actions-runner/current, /opt/maestro/current/bin, the openjdk@17
-# JAVA_HOME, the Android SDK root) - keep them in sync.
+# JAVA_HOME, the Android SDK root, /opt/github-actions) - keep them in sync.
 #
 # Xcode and its iOS simulator runtime need nothing here: Nomadintosh installs
 # them for every macOS host in this group (a "magic group" there). Sign in to
@@ -41,6 +41,14 @@ additional_homebrew_packages__github_runners:
   # patch. The actions-runner job puts /opt/homebrew/opt/ruby@4.0/bin on PATH,
   # which keeps pointing at 4.0 once Homebrew's plain `ruby` moves past it.
   - ruby@4.0
+
+# The macOS runner's HOME (/opt/github-actions/home) and tool cache
+# (/opt/github-actions/toolcache), kept out of the deploy user's real home so
+# CI's ~/.gradle, ~/.bun and so on don't land there. The job creates both
+# subdirectories itself but can't create this one: /opt is root-owned and
+# Nomad runs as the deploy user.
+directories__github_runners:
+  - path: /opt/github-actions
 
 release_archives__github_runners:
   # Unpacks flat, so /opt/actions-runner/current is the runner root (run.sh).
