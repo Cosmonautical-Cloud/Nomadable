@@ -1,0 +1,32 @@
+---
+# What a cosmonautical server needs beyond what Nomadintosh installs for every
+# host, for every host in the cosmonautical inventory group. The inventory
+# (including Semaphore's static one) only lists which hosts are in the group -
+# this file is committed so Renovate can bump the versions below.
+#
+# Loaded by playbooks/vars_plugins/nomadable_group_vars.py for any host in a
+# group named like this file, whatever inventory the run uses.
+
+# PHP extensions for the nextcloud jobs in Cosmonautical-Cloud/Nomad-Jobs
+# (nextcloud, nextcloud-cron, nextcloud-preview-generate,
+# nextcloud-roms-scan). They run Homebrew's php@8.4 on whichever server Nomad
+# picks, and Nextcloud's config.php uses redis for distributed caching and
+# locking, apcu for the local cache and imagick for previews - a host missing
+# any of them fails those jobs. Built by Macible's php_extensions role; the
+# _cosmonautical suffix merges this list with any all-level php_extensions.
+# renovate: datasource=github-releases depName=Imagick/imagick
+cosmonautical_php_imagick_version: "3.8.1"
+# renovate: datasource=github-releases depName=krakjoe/apcu extractVersion=^v(?<version>.+)$
+cosmonautical_php_apcu_version: "5.1.28"
+# renovate: datasource=github-releases depName=phpredis/phpredis
+cosmonautical_php_redis_version: "6.3.0"
+
+php_extensions__cosmonautical:
+  - name: imagick
+    version: "{{ cosmonautical_php_imagick_version }}"
+    brew_packages:
+      - imagemagick
+  - name: apcu
+    version: "{{ cosmonautical_php_apcu_version }}"
+  - name: redis
+    version: "{{ cosmonautical_php_redis_version }}"
